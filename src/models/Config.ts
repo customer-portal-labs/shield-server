@@ -6,6 +6,7 @@ export interface IConfig {
   compress?: boolean;
   cors?: boolean;
   staticDir?: string;
+  publicPath?: string;
   isSentrySupport?: boolean;
   historyApiFallback?: boolean;
 }
@@ -17,3 +18,5 @@ export interface ISSL {
 }
 
 export type TMode = 'static' | 'api' | 'fullstack';
+
+class Config {}

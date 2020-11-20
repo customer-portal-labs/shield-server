@@ -4,6 +4,7 @@ import { IConfig } from './models/Config';
 const explorerSync = cosmiconfigSync('shield');
 
 export const getConfig = (): IConfig => {
+  const rcResult = explorerSync.search();
   const defaultConfig: IConfig = {
     mode: 'static',
     port: 8080,
@@ -11,8 +12,6 @@ export const getConfig = (): IConfig => {
     isSentrySupport: !!process.env.SENTRY_DSN,
     historyApiFallback: false,
   };
-  const rcResult = explorerSync.search();
-
   if (rcResult) {
     const rcConfig = rcResult.config;
     return Object.assign(defaultConfig, rcConfig);

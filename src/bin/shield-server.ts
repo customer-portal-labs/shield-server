@@ -1,18 +1,27 @@
-// import yargs from 'yargs';
+#!/usr/bin/env node
+import fs from 'fs';
+import http from 'http';
+import https from 'https';
 import arg from 'arg';
+import chalk from 'chalk';
+import figlet from 'figlet';
+import path from 'path';
 import Express from 'express';
 import { useDefaultMiddlewares, useErrorHandler } from '../middlewares';
-import config from '../config';
+import { IConfig } from '../models/Config';
+import { getConfig } from '../config';
+const pkgJSON = require('../../package.json');
 
 const args = arg({
   // Types
   '--help': Boolean,
   '--version': Boolean,
   '--debug': Boolean,
+  '--cors': Boolean,
+  '--historyApiFallback': Boolean,
   '--verbose': arg.COUNT, // Counts the number of times --verbose is passed
   '--port': Number, // --port <number> or --port=<number>
-  '--name': String, // --name <string> or --name=<string>
-  '--tag': [String], // --tag <string> or --tag=<string>
+  '--publicPath': String, // --publicPath <string> or --publicPath=<string>
 
   // Aliases
   '-V': '--version',
@@ -22,31 +31,59 @@ const args = arg({
   //     result is stored in --name
 });
 
-console.log(args);
+if (args['--help']) {
+  console.log(chalk.red(figlet.textSync('Shield')));
+}
 
-// const args = yargs
-//   .option('mode', {
-//     alias: 'm',
-//     choices: ['static', 'api', 'fullstack'],
-//     default: 'static',
-//     description:
-//       "Server Mode, You can pick one from 'static', 'api', 'fullstack'",
-//   })
-//   .option('port', {
-//     alias: 'p',
-//     number: true,
-//     default: 8080,
-//   })
-//   .option('staticPath', {
-//     alias: 'path',
-//   });
+const config: IConfig = getConfig();
 
-// const app = Express();
+if (args._ && args._.length > 0) {
+  const staticDir = args._[0];
+  config.staticDir = path.dirname(staticDir);
+}
 
-// useDefaultMiddlewares(app);
-// useErrorHandler(app);
+if (Number.isInteger(args['--port'])) {
+  config.port = args['--port'];
+}
 
-// (async () => {
-//   await app.listen(config.port);
-//   console.log(`Shield Server is running on port: ${config.port}`);
-// })();
+if (args['--debug']) {
+  config.debug = true;
+}
+
+if (args['--cors']) {
+  config.cors = true;
+}
+
+if (args['--historyApiFallback']) {
+  config.historyApiFallback = true;
+}
+
+if (args['--version']) {
+  console.log(`shield-server v${pkgJSON.version}`);
+}
+
+if (!args['--help'] && !args['--version']) {
+  const app = Express();
+
+  useDefaultMiddlewares(app, config);
+  useErrorHandler(app, config);
+  let protocol = 'http';
+  let server = null;
+  if (config.ssl) {
+    protocol += 's';
+    const sslOptions = {
+      key: fs.readFileSync(config.ssl.key),
+      cert: fs.readFileSync(config.ssl.cert),
+    };
+    server = https.createServer(sslOptions, app);
+  } else {
+    server = http.createServer(app);
+  }
+  console.log(server.address());
+  server.listen(config.port, () => {
+    console.log(chalk.green(figlet.textSync('Shield')));
+    console.log(
+      chalk.green(`Server start on ${protocol}://localhost:${config.port}`)
+    );
+  });
+}

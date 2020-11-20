@@ -1,8 +1,8 @@
 import { Request, Response, NextFunction } from 'express';
 import NewResponse from '../models/Response';
-import config from '../config';
 
 export interface IErrorHandlerOptions {
+  isDebugMode: boolean;
   isAPIResponse: boolean;
 }
 
@@ -10,7 +10,7 @@ const errorHandler = function (options: IErrorHandlerOptions) {
   return (error: Error, req: Request, res: Response, next: NextFunction) => {
     if (error) {
       if (options.isAPIResponse) {
-        if (config.isDebugMode) {
+        if (options.isDebugMode) {
           (res as NewResponse).error(error, 500, (res as NewResponse).sentry);
         } else {
           (res as NewResponse).error(error);
