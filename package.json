@@ -9,6 +9,7 @@
     "@types"
   ],
   "scripts": {
+    "prepare": "npm run build",
     "dev": "ts-node ./src/server.ts",
     "build": "tsc --build tsconfig.production.json",
     "test": "echo \"Error: no test specified\" && exit 1",

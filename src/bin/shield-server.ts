@@ -79,7 +79,6 @@ if (!args['--help'] && !args['--version']) {
   } else {
     server = http.createServer(app);
   }
-  console.log(server.address());
   server.listen(config.port, () => {
     console.log(chalk.green(figlet.textSync('Shield')));
     console.log(
