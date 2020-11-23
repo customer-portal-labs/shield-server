@@ -39,7 +39,10 @@ const config: IConfig = getConfig();
 
 if (args._ && args._.length > 0) {
   const staticDir = args._[0];
-  config.staticDir = path.dirname(staticDir);
+  config.staticDir = staticDir;
+  console.log(staticDir);
+  console.log(config.staticDir);
+  console.log(path.resolve(config.staticDir));
 }
 
 if (Number.isInteger(args['--port'])) {

@@ -1,8 +1,19 @@
 import { Request, Response, NextFunction } from 'express';
+import { IRewriteRule } from '../models/Config';
 
-export default function () {
+export interface IRewriteOptions {
+  rules: IRewriteRule[];
+}
+
+export default function (options: IRewriteOptions) {
   return (req: Request, res: Response, next: NextFunction) => {
-    req.url = req.url.replace(/^\/labsbeta\//, '/labs/');
+    const rules = options.rules;
+
+    if (options.rules) {
+      options.rules.forEach((rule) => {
+        req.url = req.url.replace(rule.from, rule.to);
+      });
+    }
     next();
   };
 }

@@ -14,7 +14,8 @@ import errorHandler from './errorHandler';
 import health from '../routes/health';
 import info from '../routes/info';
 import { IConfig } from '../models/Config';
-import { Express } from '@sentry/tracing/dist/integrations';
+import { setProxies } from './proxy';
+import rewrite from './rewrite';
 
 const defaultConfig = getConfig();
 /**
@@ -44,36 +45,35 @@ export const useDefaultMiddlewares = (
     app.use(Sentry.Handlers.tracingHandler());
   }
 
-  app.use(
-    helmet({
-      contentSecurityPolicy: false,
-    })
-  );
+  if (config.rewrite) {
+    app.use(
+      rewrite({
+        rules: config.rewrite,
+      })
+    );
+  }
 
   if (config.compress) {
     app.use(compression());
   }
 
   if (config.cors) {
+    console.info(`cors: ${config.cors}`);
     app.use(cors());
   }
+
   app
-    .use(morgan(morganOption))
     .use(compression())
     .use(
-      '/labsbeta',
-      history({
-        verbose: config.debug,
-        rewrites: [
-          {
-            from: /^\/labsbeta\/.*$/,
-            to: (ctx) => '/labs/' + ctx.parsedUrl.pathname,
-          },
-        ],
+      helmet({
+        contentSecurityPolicy: false,
+        referrerPolicy: false,
       })
     )
     .use(health)
     .use(info(config));
+
+  setProxies(app, config);
 
   if (config.historyApiFallback) {
     app.use(history({ verbose: config.debug }));
@@ -83,6 +83,9 @@ export const useDefaultMiddlewares = (
     const publicPath = config.publicPath || '/';
     app.use(publicPath, express.static(config.staticDir));
   }
+
+  app.use(morgan(morganOption));
+
   if (config.mode === 'api') {
     app.use(helmet());
     app.use(bodyParser.json()).use(responseWrapper);
@@ -101,4 +104,5 @@ export const useErrorHandler = (
     app.use(Sentry.Handlers.errorHandler());
   }
   app.use(errorHandler({ isAPIResponse, isDebugMode }));
+  return app;
 };
