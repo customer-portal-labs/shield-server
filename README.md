@@ -36,8 +36,25 @@ shield-server .
 - **--port**
 - **--cors**
 - **--debug**
-- **--historyApiFallback**
+- **--history-api-fallback**
 - **--ssl-cert**
 - **--ssl-key**
 
 #### Middleware mode
+
+```js
+
+const express = require('express');
+const {useDefaultMiddlewares, useErrorHandler } from '@cplabs/shield-server';
+
+const app = express();
+
+useDefaultMiddlewares(app);
+useErrorHandler(app);
+
+app.listen(8080, () => {
+    console.log(`Server start...`)
+})
+
+
+```

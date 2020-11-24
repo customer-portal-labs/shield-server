@@ -18,21 +18,42 @@ const args = arg({
   '--version': Boolean,
   '--debug': Boolean,
   '--cors': Boolean,
-  '--historyApiFallback': Boolean,
-  '--verbose': arg.COUNT, // Counts the number of times --verbose is passed
+  '--history-api-fallback': Boolean,
   '--port': Number, // --port <number> or --port=<number>
-  '--publicPath': String, // --publicPath <string> or --publicPath=<string>
+  '--public-path': String, // --public-path <string> or --public-path=<string>
+  '--ssl-cert': String,
+  '--ssl-key': String,
 
   // Aliases
   '-V': '--version',
-  '-v': '--verbose',
-  '-n': '--name', // -n <string>; result is stored in --name
-  '--label': '--name', // --label <string> or --label=<string>;
-  //     result is stored in --name
+  '-H': '--help',
 });
 
 if (args['--help']) {
-  console.log(chalk.red(figlet.textSync('Shield')));
+  const helpMessage = chalk`${figlet.textSync('Shield')}
+  {bold USAGE}
+
+      {dim $} {bold shield-server} [--help] --port {underline 8080}
+
+  {bold OPTIONS}
+      --help                      Shows this help message
+      --version                   Shows version
+      --debug                     Turn on debug mode
+      --cors                      Turn on cors
+      --history-api-fallback      Turn on single page mode
+      --port {underline 8080}     The server port
+      --public-path               The public path
+      --ssl-cert                  The cert path for SSL
+      --ssl-key                   The key path for SSL
+      
+`;
+  console.log(helpMessage);
+  process.exit(0);
+}
+
+if (args['--version']) {
+  console.log(`${pkgJSON.version}`);
+  process.exit(0);
 }
 
 const config: IConfig = getConfig();
@@ -40,29 +61,29 @@ const config: IConfig = getConfig();
 if (args._ && args._.length > 0) {
   const staticDir = args._[0];
   config.staticDir = staticDir;
-  console.log(staticDir);
-  console.log(config.staticDir);
-  console.log(path.resolve(config.staticDir));
 }
 
 if (Number.isInteger(args['--port'])) {
   config.port = args['--port'];
 }
 
-if (args['--debug']) {
-  config.debug = true;
-}
-
 if (args['--cors']) {
   config.cors = true;
 }
 
-if (args['--historyApiFallback']) {
+if (args['--history-api-fallback']) {
   config.historyApiFallback = true;
 }
 
-if (args['--version']) {
-  console.log(`shield-server v${pkgJSON.version}`);
+if (args['--ssl-cert'] && args['--ssl-key']) {
+  config.ssl = {
+    cert: args['--ssl-cert'],
+    key: args['--ssl-key'],
+  };
+}
+
+if (args['--debug']) {
+  config.debug = true;
 }
 
 if (!args['--help'] && !args['--version']) {
@@ -87,5 +108,12 @@ if (!args['--help'] && !args['--version']) {
     console.log(
       chalk.green(`Server start on ${protocol}://localhost:${config.port}`)
     );
+    if (config.debug) {
+      console.log(chalk`
+  {bold Debug Mode}
+
+    ${JSON.stringify(config, null, 2)}
+  `);
+    }
   });
 }

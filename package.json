@@ -3,7 +3,7 @@
   "version": "0.0.1-alpha-20201123",
   "description": "",
   "bin": "./dist/bin/shield-server.js",
-  "main": "index.js",
+  "main": "./dist/middlewares/index.js",
   "files": [
     "dist",
     "@types"
