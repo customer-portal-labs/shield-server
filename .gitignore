@@ -1,5 +1,6 @@
 ## No JS allow to push
-*.js
+src/**/*.js
+test/**/*.js
 *.map
 @types/
 

@@ -1,6 +1,6 @@
 {
   "name": "@cplabs/shield-server",
-  "version": "0.0.1-alpha-20201124",
+  "version": "0.0.1",
   "description": "",
   "bin": "./dist/bin/shield-server.js",
   "main": "./dist/middlewares/index.js",
