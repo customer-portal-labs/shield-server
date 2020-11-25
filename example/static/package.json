@@ -1,0 +1,12 @@
+{
+  "name": "static-example",
+  "private": true,
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "start": "../../dist/bin/shield-server.js ."
+  },
+  "author": "",
+  "license": "MIT"
+}
