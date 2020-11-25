@@ -28,6 +28,7 @@ export const useDefaultMiddlewares = (
   config: IConfig = defaultConfig
 ) => {
   const morganOption = config.debug ? 'dev' : 'combined';
+  app.use(morgan(morganOption));
   if (config.isSentrySupport) {
     Sentry.init({
       integrations: [
@@ -83,8 +84,6 @@ export const useDefaultMiddlewares = (
     const publicPath = config.publicPath || '/';
     app.use(publicPath, express.static(config.staticDir));
   }
-
-  app.use(morgan(morganOption));
 
   if (config.mode === 'api') {
     app.use(helmet());
