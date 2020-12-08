@@ -1,10 +1,15 @@
+import { CorsOptions, CorsOptionsDelegate } from 'cors';
+
 export interface IConfig {
   mode: TMode;
   debug: boolean;
+  morganFormat: string;
   port?: number;
   ssl?: ISSL;
-  compress?: boolean;
+  compression?: boolean;
   cors?: boolean;
+  corsOption?: CorsOptions | CorsOptionsDelegate;
+  helmetOption?: Record<string, unknown>;
   staticDir?: string;
   publicPath?: string;
   isSentrySupport?: boolean;
@@ -30,5 +35,3 @@ export interface IRewriteRule {
 }
 
 export type TMode = 'static' | 'api' | 'fullstack';
-
-class Config {}

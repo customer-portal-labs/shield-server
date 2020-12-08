@@ -1,12 +1,9 @@
 const express = require('express');
-const {
-  useDefaultMiddlewares,
-  useErrorHandler,
-} = require('../../dist/middlewares');
-
+const defaultMiddlewares = require('../../dist/middlewares/default');
+const defaultErrorHandlers = require('../../dist/middlewares/errorHandler');
 const app = express();
 
-useDefaultMiddlewares(app);
+app.use(defaultMiddlewares());
 /**
  * Do your stuff
  */
@@ -14,7 +11,8 @@ useDefaultMiddlewares(app);
 app.get('/', (req, res) => {
   res.send('Hello Shield');
 });
-useErrorHandler(app);
+
+app.use(defaultErrorHandlers())
 
 app.listen(8080, () => {
   console.log('Server start!');

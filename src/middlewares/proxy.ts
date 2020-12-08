@@ -1,21 +1,26 @@
 import https from 'https';
-import * as core from 'express-serve-static-core';
 import { createProxyMiddleware, Options } from 'http-proxy-middleware';
-import { IConfig } from '../models/Config';
+import { IProxy } from '../models/Config';
+import { NextFunction, Request, RequestHandler, Response } from 'express';
 
-export const setProxies = (app: core.Express, config: IConfig) => {
-  if (config.proxies) {
-    config.proxies.forEach((proxy) => {
-      const options: Options = {
-        changeOrigin: true,
-        xfwd: true,
-        target: proxy.to,
-      };
+export default (proxies: IProxy[]): RequestHandler => (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
+  const match = proxies.find((p) => req.url.startsWith(p.from));
+  if (match) {
+    const opt: Options = {
+      changeOrigin: true,
+      xfwd: true,
+      target: match.to,
+    };
 
-      if (proxy.to.startsWith('https')) {
-        options.agent = https.globalAgent;
-      }
-      app.use(proxy.from, createProxyMiddleware(options));
-    });
+    if (match.to.startsWith('https')) {
+      opt.agent = https.globalAgent;
+    }
+
+    return createProxyMiddleware(opt)(req, res, next);
   }
+  next();
 };

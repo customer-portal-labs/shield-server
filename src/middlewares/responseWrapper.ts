@@ -1,4 +1,4 @@
-import { Request, NextFunction } from 'express';
+import { Request, NextFunction, RequestHandler } from 'express';
 import Response from '../models/Response';
 
 export enum Status {
@@ -19,9 +19,13 @@ interface FailResponseBody<T> {
   message?: string;
 }
 
-interface ErrorResponseBody<T> extends FailResponseBody<T> {}
+type ResponseBody<T> = SuccessResponseBody<T> & FailResponseBody<T>;
 
-export default () => (req: Request, res: Response, next: NextFunction) => {
+export default (): Partial<RequestHandler> => (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
   res.success = <T>(data: T, statusCode = 200, message?: string) => {
     res.status(statusCode).json(format(statusCode, data, null, message));
   };
@@ -33,6 +37,7 @@ export default () => (req: Request, res: Response, next: NextFunction) => {
   res.error = <T>(error: T, statusCode = 500, message?: string) => {
     res.status(statusCode).json(format(statusCode, null, error, message));
   };
+  next();
 };
 
 const format = <T>(
@@ -40,8 +45,8 @@ const format = <T>(
   data?: T,
   error?: T,
   message?: string
-): SuccessResponseBody<T> | FailResponseBody<T> | ErrorResponseBody<T> => {
-  const obj: any = {
+): Partial<ResponseBody<T>> => {
+  const obj: Partial<ResponseBody<T>> = {
     status: statusCode,
   };
 
