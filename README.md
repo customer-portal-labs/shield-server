@@ -45,14 +45,14 @@ shield-server .
 ```js
 const express = require('express');
 const {
-  useDefaultMiddlewares,
-  useErrorHandler,
+  defaultMiddlewares,
+  defaultErrorHandlers,
 } = require('@cplabs/shield-server');
 
 const app = express();
 
-useDefaultMiddlewares(app);
-useErrorHandler(app);
+app.use(defaultMiddlewares());
+app.use(defaultErrorHandlers());
 
 app.listen(8080, () => {
   console.log(`Server start...`);

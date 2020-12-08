@@ -5,11 +5,13 @@ import https from 'https';
 import arg from 'arg';
 import chalk from 'chalk';
 import figlet from 'figlet';
-import path from 'path';
 import Express from 'express';
-import { useDefaultMiddlewares, useErrorHandler } from '../middlewares';
+import internalIp from 'internal-ip';
+import defaultMiddleware from '../middlewares/default';
+import defaultErrorHandler from '../middlewares/errorHandler';
 import { IConfig } from '../models/Config';
 import { getConfig } from '../config';
+// eslint-disable-next-line
 const pkgJSON = require('../../package.json');
 
 const args = arg({
@@ -89,8 +91,8 @@ if (args['--debug']) {
 if (!args['--help'] && !args['--version']) {
   const app = Express();
 
-  useDefaultMiddlewares(app, config);
-  useErrorHandler(app, config);
+  app.use(defaultMiddleware(config));
+  app.use(defaultErrorHandler(config));
   let protocol = 'http';
   let server = null;
   if (config.ssl) {
@@ -106,7 +108,9 @@ if (!args['--help'] && !args['--version']) {
   server.listen(config.port, () => {
     console.log(chalk.green(figlet.textSync('Shield')));
     console.log(
-      chalk.green(`Server start on ${protocol}://localhost:${config.port}`)
+      chalk.green(
+        `Server start on ${protocol}://${internalIp.v4.sync()}:${config.port}`
+      )
     );
     if (config.debug) {
       console.log(chalk`

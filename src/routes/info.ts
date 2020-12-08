@@ -1,7 +1,7 @@
 import { Router } from 'express';
 import { IConfig } from '../models/Config';
 
-export default (config: IConfig) => {
+export default (config: IConfig): Router => {
   const router = Router();
 
   router.get('/server-info', (req, res) => {
