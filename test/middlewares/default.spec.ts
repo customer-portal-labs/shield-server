@@ -36,7 +36,7 @@ describe('middlewares', () => {
       .expect(
         200,
         {
-          status: 200,
+          status: 'success',
           data: {
             name: 'john',
           },

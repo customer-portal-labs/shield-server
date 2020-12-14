@@ -1,7 +1,4 @@
 import Log2Splunk, { ILog2SplunkOptions, IMetadata } from 'log2splunk';
-import { getConfig } from './config';
-
-const config = getConfig();
 
 const opts: Partial<ILog2SplunkOptions> = {
   token: process.env.SPLUNK_TOKEN || '',
