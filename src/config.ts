@@ -13,7 +13,10 @@ export const getConfig = (): IConfig => {
     morganFormat: 'combined',
     port: 8080,
     debug: false,
-    isSplunkSupport: !!process.env.SPLUNK_TOKEN && !!process.env.SPLUNK_HOST,
+    responseWrapper: true, // Only works when mode = api
+    splunk: {
+      httpRequest: false,
+    },
     historyApiFallback: false,
     helmetOption: {
       contentSecurityPolicy: false,

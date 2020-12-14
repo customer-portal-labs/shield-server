@@ -53,7 +53,7 @@ export default (options: IConfig = defaultConfig): RequestHandler[] => {
   };
   const middlewares: RequestHandler[] = [
     morgan('combined', {
-      stream: morganStream,
+      stream: options.splunk?.httpRequest ? morganStream : process.stdout,
     }),
     helmet(options.helmetOption),
     cookieParser(),
@@ -92,7 +92,10 @@ export default (options: IConfig = defaultConfig): RequestHandler[] => {
 
   if (options.mode === 'api') {
     middlewares.push(bodyParser.json());
-    middlewares.push(responseWrapper() as RequestHandler);
+
+    if (options.responseWrapper) {
+      middlewares.push(responseWrapper() as RequestHandler);
+    }
   }
 
   return middlewares;
