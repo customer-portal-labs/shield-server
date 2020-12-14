@@ -1,6 +1,6 @@
 # Shield Server
 
-[![Build Status](https://github.com/customer-portal-labs/shield-server/workflows/Build/badg
+[![Build Status](https://github.com/customer-portal-labs/shield-server/workflows/Build/badge.svg)](https://github.com/customer-portal-labs/shield-server/actions)
 [![npm version](https://badge.fury.io/js/%40cplabs%2Fshield-server.svg)](https://badge.fury.io/js/%40cplabs%2Fshield-server)
 [![shield: project](https://img.shields.io/badge/shield-project-green.svg?style=flat-square)](https://github.com/customer-portal-labs/shield-server)
 [![TypeScript](https://img.shields.io/badge/%3C%2F%3E-TypeScript-007ACC.svg?style=flat-square)](https://www.typescriptlang.org)
