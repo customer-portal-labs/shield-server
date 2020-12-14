@@ -8,13 +8,13 @@ export enum Status {
 }
 
 interface SuccessResponseBody<T> {
-  status: number;
+  status: string;
   data: T;
   message?: string;
 }
 
 interface FailResponseBody<T> {
-  status: number;
+  status: string;
   error: T;
   message?: string;
 }
@@ -27,27 +27,27 @@ export default (): Partial<RequestHandler> => (
   next: NextFunction
 ) => {
   res.success = <T>(data: T, statusCode = 200, message?: string) => {
-    res.status(statusCode).json(format(statusCode, data, null, message));
+    res.status(statusCode).json(format('success', data, null, message));
   };
 
   res.fail = <T>(error: T, statusCode = 400, message?: string) => {
-    res.status(statusCode).json(format(statusCode, null, error, message));
+    res.status(statusCode).json(format('fail', null, error, message));
   };
 
   res.error = <T>(error: T, statusCode = 500, message?: string) => {
-    res.status(statusCode).json(format(statusCode, null, error, message));
+    res.status(statusCode).json(format('error', null, error, message));
   };
   next();
 };
 
 const format = <T>(
-  statusCode: number,
+  status: string,
   data?: T,
   error?: T,
   message?: string
 ): Partial<ResponseBody<T>> => {
   const obj: Partial<ResponseBody<T>> = {
-    status: statusCode,
+    status,
   };
 
   if (data) {

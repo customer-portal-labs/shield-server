@@ -6,10 +6,14 @@ const config = getConfig();
 const opts: Partial<ILog2SplunkOptions> = {
   token: process.env.SPLUNK_TOKEN || '',
   host: process.env.SPLUNK_HOST,
-  source: config.name,
+  source: process.env.SPLUNK_SOURCE,
   https: {
     rejectUnauthorized: false,
   },
+};
+
+const defaultMetadata: IMetadata = {
+  host: process.env.SPLUNK_SOURCE_HOST,
 };
 
 type LoggerLevel = 'log' | 'info' | 'warn' | 'debug' | 'error';
@@ -20,9 +24,9 @@ class Logger {
   private sendToSplunk(
     message: string | Record<string, unknown>,
     level: LoggerLevel,
-    metadata?: IMetadata
+    metadata: IMetadata = defaultMetadata
   ) {
-    if (config.isSplunkSupport) {
+    if (!!process.env.SPLUNK_TOKEN && !!process.env.SPLUNK_HOST) {
       this.SplunkLogger.send(message, {
         sourcetype: level,
         ...metadata,

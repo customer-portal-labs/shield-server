@@ -13,7 +13,8 @@ export interface IConfig {
   helmetOption?: Record<string, unknown>;
   staticDir?: string;
   publicPath?: string;
-  isSplunkSupport?: boolean;
+  splunk?: ISplunkOption;
+  responseWrapper?: boolean;
   historyApiFallback?: boolean;
   proxies?: IProxy[];
   rewrite?: IRewriteRule[];
@@ -33,6 +34,10 @@ export interface IProxy {
 export interface IRewriteRule {
   from: string;
   to: string;
+}
+
+export interface ISplunkOption {
+  httpRequest?: boolean;
 }
 
 export type TMode = 'static' | 'api' | 'fullstack';
