@@ -1,6 +1,7 @@
 import { CorsOptions, CorsOptionsDelegate } from 'cors';
 
 export interface IConfig {
+  name: string;
   mode: TMode;
   debug: boolean;
   morganFormat: string;
@@ -12,7 +13,7 @@ export interface IConfig {
   helmetOption?: Record<string, unknown>;
   staticDir?: string;
   publicPath?: string;
-  isSentrySupport?: boolean;
+  isSplunkSupport?: boolean;
   historyApiFallback?: boolean;
   proxies?: IProxy[];
   rewrite?: IRewriteRule[];

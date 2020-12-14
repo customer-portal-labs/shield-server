@@ -21,12 +21,14 @@ const args = arg({
   '--debug': Boolean,
   '--cors': Boolean,
   '--history-api-fallback': Boolean,
+  '--name': String,
   '--port': Number, // --port <number> or --port=<number>
   '--public-path': String, // --public-path <string> or --public-path=<string>
   '--ssl-cert': String,
   '--ssl-key': String,
 
   // Aliases
+  '-N': '--name',
   '-V': '--version',
   '-H': '--help',
 });
@@ -40,6 +42,7 @@ if (args['--help']) {
   {bold OPTIONS}
       --help                      Shows this help message
       --version                   Shows version
+      --name                      Setup app name
       --debug                     Turn on debug mode
       --cors                      Turn on cors
       --history-api-fallback      Turn on single page mode
@@ -47,7 +50,7 @@ if (args['--help']) {
       --public-path               The public path
       --ssl-cert                  The cert path for SSL
       --ssl-key                   The key path for SSL
-      
+
 `;
   console.log(helpMessage);
   process.exit(0);
@@ -71,6 +74,10 @@ if (Number.isInteger(args['--port'])) {
 
 if (args['--cors']) {
   config.cors = true;
+}
+
+if (args['--name']) {
+  config.name = args['--name'];
 }
 
 if (args['--history-api-fallback']) {

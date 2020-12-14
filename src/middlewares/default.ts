@@ -3,9 +3,8 @@ import compression from 'compression';
 import morgan from 'morgan';
 import cors from 'cors';
 import helmet from 'helmet';
+import cookieParser from 'cookie-parser';
 import history from 'connect-history-api-fallback';
-import * as Sentry from '@sentry/node';
-import * as Tracing from '@sentry/tracing';
 import { IConfig } from '../models/Config';
 import rewrite from './rewrite';
 import proxy from './proxy';
@@ -14,6 +13,7 @@ import responseWrapper from './responseWrapper';
 import health from '../routes/health';
 import info from '../routes/info';
 import { getConfig } from '../config';
+import Logger from '../logger';
 
 const defaultConfig = getConfig();
 
@@ -31,9 +31,32 @@ export default (options: IConfig = defaultConfig): RequestHandler[] => {
       undefined
     );
   });
+
+  morgan.token('remote-user', (req: Request) => {
+    const rhUser = req.cookies['rh_user'];
+    if (rhUser) {
+      return rhUser.substring(0, rhUser.indexOf('|'));
+    }
+    return 'nonloginuser';
+  });
+
+  const morganStream = {
+    write: async (message: string) => {
+      try {
+        await Logger.info(message, {
+          sourcetype: 'access_combined',
+        });
+      } catch (err) {
+        console.error(err);
+      }
+    },
+  };
   const middlewares: RequestHandler[] = [
-    morgan(options.morganFormat),
+    morgan('combined', {
+      stream: morganStream,
+    }),
     helmet(options.helmetOption),
+    cookieParser(),
   ];
 
   if (options.compression) {
@@ -42,23 +65,6 @@ export default (options: IConfig = defaultConfig): RequestHandler[] => {
 
   if (options.cors) {
     middlewares.push(cors(options.corsOption));
-  }
-
-  if (options.isSentrySupport) {
-    Sentry.init({
-      integrations: [
-        // enable HTTP calls tracing
-        new Sentry.Integrations.Http({ tracing: true }),
-        // enable Express.js middleware tracing
-        new Tracing.Integrations.Express(),
-      ],
-      tracesSampleRate: 1.0,
-    });
-    // RequestHandler creates a separate execution context using domains, so that every
-    // transaction/span/breadcrumb is attached to its own Hub instance
-    middlewares.push(Sentry.Handlers.requestHandler());
-    // TracingHandler creates a trace for every incoming request
-    middlewares.push(Sentry.Handlers.tracingHandler());
   }
 
   if (options.rewrite) {
