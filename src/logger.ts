@@ -39,31 +39,31 @@ class Logger {
   }
 
   log(message: string | Record<string, unknown>, metadata?: IMetadata): void {
-    process.stdout.write(this.stringMessage(message));
+    console.log(this.stringMessage(message));
     this.sendToSplunk(message, 'log', metadata);
   }
 
   info(message: string | Record<string, unknown>, metadata?: IMetadata): void {
-    process.stdout.write(this.stringMessage(message));
+    console.info(this.stringMessage(message));
     this.sendToSplunk(message, 'info', metadata);
   }
 
   debug(message: string | Record<string, unknown>, metadata?: IMetadata): void {
     if (config.loggerLevel === 'debug') {
-      process.stdout.write(this.stringMessage(message));
+      console.debug(this.stringMessage(message));
       this.sendToSplunk(message, 'debug', metadata);
     }
   }
 
   warn(message: string | Record<string, unknown>, metadata?: IMetadata): void {
     if (config.loggerLevel === 'warn') {
-      process.stdout.write(this.stringMessage(message));
+      console.warn(this.stringMessage(message));
       this.sendToSplunk(message, 'warn', metadata);
     }
   }
 
   error(message: string | Record<string, unknown>, metadata?: IMetadata): void {
-    process.stderr.write(this.stringMessage(message));
+    console.error(this.stringMessage(message));
     this.sendToSplunk(message, 'error', metadata);
   }
 }

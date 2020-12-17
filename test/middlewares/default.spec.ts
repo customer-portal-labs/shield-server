@@ -90,4 +90,24 @@ describe('middlewares', () => {
       .expect(200)
       .end(done);
   });
+
+  it('health router', (done) => {
+    const app = express();
+    app.use(defaultMiddlewares());
+
+    request(app)
+      .get('/server-health')
+      .set('User-Agent', 'Unit test')
+      .expect(200, "I'm OK", done);
+  });
+
+  it('info router', (done) => {
+    const app = express();
+    app.use(defaultMiddlewares());
+
+    request(app)
+      .get('/server-info')
+      .set('User-Agent', 'Unit test')
+      .expect(200, config, done);
+  });
 });
