@@ -1,5 +1,5 @@
 import { Request, NextFunction, RequestHandler } from 'express';
-import Response from '../models/Response';
+import { Response } from '../models/Response';
 
 export enum Status {
   success,

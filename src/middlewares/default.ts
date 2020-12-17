@@ -5,19 +5,19 @@ import cors from 'cors';
 import helmet from 'helmet';
 import cookieParser from 'cookie-parser';
 import history from 'connect-history-api-fallback';
-import { IConfig } from '../models/Config';
+import { ShieldConfig } from '../models/Config';
 import rewrite from './rewrite';
 import proxy from './proxy';
 import bodyParser from 'body-parser';
 import responseWrapper from './responseWrapper';
 import health from '../routes/health';
 import info from '../routes/info';
-import { getConfig } from '../config';
-import Logger from '../logger';
+import { config } from '../config';
+import { logger } from '../logger';
 
-const defaultConfig = getConfig();
-
-export default (options: IConfig = defaultConfig): RequestHandler[] => {
+export const defaultMiddlewares = (
+  options: ShieldConfig = config
+): RequestHandler[] => {
   morgan.token('remote-addr', (req: Request) => {
     const akamaiIP = req.header('True-Client-IP');
     const realIP = req.header('x-real-ip');
@@ -43,7 +43,7 @@ export default (options: IConfig = defaultConfig): RequestHandler[] => {
   const morganStream = {
     write: async (message: string) => {
       try {
-        await Logger.info(message, {
+        await logger.info(message, {
           sourcetype: 'access_combined',
         });
       } catch (err) {

@@ -1,8 +1,8 @@
 import { Request, Response, NextFunction, RequestHandler } from 'express';
-import { IRewriteRule } from '../models/Config';
+import { RewriteRule } from '../models/Config';
 
 export interface IRewriteOptions {
-  rules: IRewriteRule[];
+  rules: RewriteRule[];
 }
 
 export default (options: IRewriteOptions): RequestHandler => (

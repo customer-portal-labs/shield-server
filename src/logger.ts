@@ -1,4 +1,6 @@
 import Log2Splunk, { ILog2SplunkOptions, IMetadata } from 'log2splunk';
+import { LoggerLevel } from './models/Config';
+import { config } from './config';
 
 const opts: Partial<ILog2SplunkOptions> = {
   token: process.env.SPLUNK_TOKEN || '',
@@ -12,8 +14,6 @@ const opts: Partial<ILog2SplunkOptions> = {
 const defaultMetadata: IMetadata = {
   host: process.env.SPLUNK_SOURCE_HOST,
 };
-
-type LoggerLevel = 'log' | 'info' | 'warn' | 'debug' | 'error';
 
 class Logger {
   private SplunkLogger = new Log2Splunk(opts);
@@ -49,13 +49,17 @@ class Logger {
   }
 
   debug(message: string | Record<string, unknown>, metadata?: IMetadata): void {
-    process.stdout.write(this.stringMessage(message));
-    this.sendToSplunk(message, 'debug', metadata);
+    if (config.loggerLevel === 'debug') {
+      process.stdout.write(this.stringMessage(message));
+      this.sendToSplunk(message, 'debug', metadata);
+    }
   }
 
   warn(message: string | Record<string, unknown>, metadata?: IMetadata): void {
-    process.stdout.write(this.stringMessage(message));
-    this.sendToSplunk(message, 'warn', metadata);
+    if (config.loggerLevel === 'warn') {
+      process.stdout.write(this.stringMessage(message));
+      this.sendToSplunk(message, 'warn', metadata);
+    }
   }
 
   error(message: string | Record<string, unknown>, metadata?: IMetadata): void {
@@ -64,4 +68,4 @@ class Logger {
   }
 }
 
-export default new Logger();
+export const logger = new Logger();

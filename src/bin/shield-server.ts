@@ -7,10 +7,7 @@ import chalk from 'chalk';
 import figlet from 'figlet';
 import Express from 'express';
 import internalIp from 'internal-ip';
-import defaultMiddleware from '../middlewares/default';
-import defaultErrorHandler from '../middlewares/errorHandler';
-import { IConfig } from '../models/Config';
-import { getConfig } from '../config';
+import { defaultMiddlewares, defaultErrorHandlers, config } from '../';
 // eslint-disable-next-line
 const pkgJSON = require('../../package.json');
 
@@ -61,8 +58,6 @@ if (args['--version']) {
   process.exit(0);
 }
 
-const config: IConfig = getConfig();
-
 if (args._ && args._.length > 0) {
   const staticDir = args._[0];
   config.staticDir = staticDir;
@@ -98,8 +93,8 @@ if (args['--debug']) {
 if (!args['--help'] && !args['--version']) {
   const app = Express();
 
-  app.use(defaultMiddleware(config));
-  app.use(defaultErrorHandler(config));
+  app.use(defaultMiddlewares(config));
+  app.use(defaultErrorHandlers(config));
   let protocol = 'http';
   let server = null;
   if (config.ssl) {
