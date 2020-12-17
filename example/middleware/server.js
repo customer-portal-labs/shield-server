@@ -1,6 +1,5 @@
 const express = require('express');
-const defaultMiddlewares = require('../../dist/middlewares/default');
-const defaultErrorHandlers = require('../../dist/middlewares/errorHandler');
+const {defaultMiddlewares, defaultErrorHandlers} = require('../../dist');
 const app = express();
 
 app.use(defaultMiddlewares());

@@ -1,7 +1,7 @@
 # Shield Server
 
 [![Build Status](https://github.com/customer-portal-labs/shield-server/workflows/Build/badge.svg)](https://github.com/customer-portal-labs/shield-server/actions)
-[![npm version](https://badge.fury.io/js/%40cplabs%2Fshield-server.svg)](https://badge.fury.io/js/%40cplabs%2Fshield-server)
+[![npm version](https://img.shields.io/npm/v/@cplabs/shield-server?logo=npm)](https://www.npmjs.com/package/@cplabs/shield-server)
 [![shield: project](https://img.shields.io/badge/shield-project-green.svg?style=flat-square)](https://github.com/customer-portal-labs/shield-server)
 [![TypeScript](https://img.shields.io/badge/%3C%2F%3E-TypeScript-007ACC.svg?style=flat-square)](https://www.typescriptlang.org)
 [![code style: prettier](https://img.shields.io/badge/code_style-prettier-ff69b4.svg?style=flat-square)](https://github.com/prettier/prettier)
@@ -26,9 +26,6 @@ yarn add @cplabs/shield-server
 
 ```shell
 # Default
-shield-server
-
-# Serve Static only
 shield-server .
 
 ```
@@ -49,6 +46,7 @@ const express = require('express');
 const {
   defaultMiddlewares,
   defaultErrorHandlers,
+  logger,
 } = require('@cplabs/shield-server');
 
 const app = express();
@@ -57,6 +55,6 @@ app.use(defaultMiddlewares());
 app.use(defaultErrorHandlers());
 
 app.listen(8080, () => {
-  console.log(`Server start...`);
+  logger.info(`Server start...`);
 });
 ```
