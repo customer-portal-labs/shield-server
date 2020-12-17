@@ -1,9 +1,9 @@
 {
   "name": "@cplabs/shield-server",
-  "version": "0.0.3-rc.4",
+  "version": "0.0.3-rc.5",
   "description": "",
   "bin": "./dist/bin/shield-server.js",
-  "main": "./dist/middlewares/index.js",
+  "main": "./dist/index.js",
   "types": "./@types/index.d.ts",
   "files": [
     "dist",
