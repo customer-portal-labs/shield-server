@@ -6,12 +6,11 @@
     "esModuleInterop": true,
     "strict": true,
     "allowJs": false,
-    "rootDir": "./src",
-    "outDir": "./dist",
+    "outDir": "dist",
     "declarationDir": "./@types",
     "resolveJsonModule": true,
     "declaration": true
   },
-  "include": ["./src/**/*.ts"],
+  "include": ["src/**/*.ts"],
   "exclude": ["node_modules", "@types"]
 }

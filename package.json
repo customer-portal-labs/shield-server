@@ -17,7 +17,7 @@
     "pretest": "npm run lint",
     "test": "nyc mocha",
     "lint": "eslint src --ext .ts",
-    "clean": "rimraf ./dist ./@types"
+    "clean": "rimraf ./dist ./@types ./coverage"
   },
   "repository": {
     "type": "git",
