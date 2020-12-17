@@ -1,43 +1,45 @@
 import { CorsOptions, CorsOptionsDelegate } from 'cors';
 
-export interface IConfig {
+export interface ShieldConfig {
   name: string;
-  mode: TMode;
+  mode: ShieldMode;
   debug: boolean;
   morganFormat: string;
   port?: number;
-  ssl?: ISSL;
+  ssl?: SSLConfig;
   compression?: boolean;
   cors?: boolean;
   corsOption?: CorsOptions | CorsOptionsDelegate;
   helmetOption?: Record<string, unknown>;
   staticDir?: string;
   publicPath?: string;
-  splunk?: ISplunkOption;
+  splunk?: SplunkOption;
   responseWrapper?: boolean;
   historyApiFallback?: boolean;
-  proxies?: IProxy[];
-  rewrite?: IRewriteRule[];
+  proxies?: ProxyConfig[];
+  rewrite?: RewriteRule[];
+  loggerLevel: LoggerLevel;
 }
 
-export interface ISSL {
+export interface SSLConfig {
   cert: string;
   key: string;
   ca?: string;
 }
 
-export interface IProxy {
+export interface ProxyConfig {
   from: string;
   to: string;
 }
 
-export interface IRewriteRule {
+export interface RewriteRule {
   from: string;
   to: string;
 }
 
-export interface ISplunkOption {
+export interface SplunkOption {
   httpRequest?: boolean;
 }
 
-export type TMode = 'static' | 'api' | 'fullstack';
+export type ShieldMode = 'static' | 'api' | 'fullstack';
+export type LoggerLevel = 'log' | 'info' | 'warn' | 'debug' | 'error';

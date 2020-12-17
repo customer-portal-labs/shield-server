@@ -1,11 +1,11 @@
 import { cosmiconfigSync } from 'cosmiconfig';
-import { IConfig } from './models/Config';
+import { ShieldConfig } from './models/Config';
 
 const explorerSync = cosmiconfigSync('shield');
 
-export const getConfig = (): IConfig => {
+const getConfig = (): ShieldConfig => {
   const rcResult = explorerSync.search();
-  const defaultConfig: IConfig = {
+  const defaultConfig: ShieldConfig = {
     name: 'shield-server',
     compression: true,
     cors: true,
@@ -22,6 +22,7 @@ export const getConfig = (): IConfig => {
       contentSecurityPolicy: false,
       referrerPolicy: false,
     },
+    loggerLevel: 'info',
   };
   if (rcResult) {
     const rcConfig = rcResult.config;
@@ -29,3 +30,5 @@ export const getConfig = (): IConfig => {
   }
   return defaultConfig;
 };
+
+export const config = getConfig();

@@ -1,13 +1,15 @@
 import express, { Request, Response } from 'express';
 import request from 'supertest';
-import defaultMiddleware from '../../src/middlewares/default';
-import { getConfig } from '../../src/config';
-import SelfResponse from '../../src/models/Response';
+import {
+  defaultMiddlewares,
+  config,
+  Response as SelfResponse,
+} from '../../src/index';
 
 describe('middlewares', () => {
   it('default middleware', (done) => {
     const app = express();
-    app.use(defaultMiddleware());
+    app.use(defaultMiddlewares());
     app.get('/user', (req: Request, res: Response) => {
       res.status(200).json({ name: 'john' });
     });
@@ -25,8 +27,7 @@ describe('middlewares', () => {
 
   it('api mode', (done) => {
     const app = express();
-    const config = getConfig();
-    app.use(defaultMiddleware({ ...config, mode: 'api' }));
+    app.use(defaultMiddlewares({ ...config, mode: 'api' }));
     app.get('/api/user', (req: Request, res: Response) => {
       (res as SelfResponse).success({ name: 'john' });
     });
@@ -47,9 +48,8 @@ describe('middlewares', () => {
 
   it('with proxy', (done) => {
     const app = express();
-    const config = getConfig();
     app.use(
-      defaultMiddleware({
+      defaultMiddlewares({
         ...config,
         proxies: [
           {
@@ -69,9 +69,8 @@ describe('middlewares', () => {
 
   it('with rewrite', (done) => {
     const app = express();
-    const config = getConfig();
     app.use(
-      defaultMiddleware({
+      defaultMiddlewares({
         ...config,
         rewrite: [
           {
@@ -90,5 +89,25 @@ describe('middlewares', () => {
       .set('User-Agent', 'Unit test')
       .expect(200)
       .end(done);
+  });
+
+  it('health router', (done) => {
+    const app = express();
+    app.use(defaultMiddlewares());
+
+    request(app)
+      .get('/server-health')
+      .set('User-Agent', 'Unit test')
+      .expect(200, "I'm OK", done);
+  });
+
+  it('info router', (done) => {
+    const app = express();
+    app.use(defaultMiddlewares());
+
+    request(app)
+      .get('/server-info')
+      .set('User-Agent', 'Unit test')
+      .expect(200, config, done);
   });
 });

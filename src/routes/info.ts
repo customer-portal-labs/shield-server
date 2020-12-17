@@ -1,7 +1,7 @@
 import { Router } from 'express';
-import { IConfig } from '../models/Config';
+import { ShieldConfig } from '../models/Config';
 
-export default (config: IConfig): Router => {
+export default (config: ShieldConfig): Router => {
   const router = Router();
 
   router.get('/server-info', (req, res) => {

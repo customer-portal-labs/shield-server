@@ -1,9 +1,9 @@
 import https from 'https';
 import { createProxyMiddleware, Options } from 'http-proxy-middleware';
-import { IProxy } from '../models/Config';
+import { ProxyConfig } from '../models/Config';
 import { NextFunction, Request, RequestHandler, Response } from 'express';
 
-export default (proxies: IProxy[]): RequestHandler => (
+export default (proxies: ProxyConfig[]): RequestHandler => (
   req: Request,
   res: Response,
   next: NextFunction
