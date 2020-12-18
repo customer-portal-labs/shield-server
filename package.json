@@ -1,6 +1,6 @@
 {
   "name": "@cplabs/shield-server",
-  "version": "0.0.3-rc.5",
+  "version": "0.0.3-rc.6",
   "description": "",
   "bin": "./dist/bin/shield-server.js",
   "main": "./dist/index.js",
