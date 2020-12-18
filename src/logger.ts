@@ -3,16 +3,16 @@ import { LoggerLevel } from './models/Config';
 import { config } from './config';
 
 const opts: Partial<ILog2SplunkOptions> = {
-  token: process.env.SPLUNK_TOKEN || '',
-  host: process.env.SPLUNK_HOST,
-  source: process.env.SPLUNK_SOURCE,
+  token: config.splunk?.token,
+  host: config.splunk?.host,
+  source: config.splunk?.source,
   https: {
     rejectUnauthorized: false,
   },
 };
 
 const defaultMetadata: IMetadata = {
-  host: process.env.SPLUNK_SOURCE_HOST,
+  host: config.splunk?.sourceHost,
 };
 
 class Logger {
@@ -23,10 +23,14 @@ class Logger {
     level: LoggerLevel,
     metadata: IMetadata = defaultMetadata
   ) {
-    if (!!process.env.SPLUNK_TOKEN && !!process.env.SPLUNK_HOST) {
+    if (!!config.splunk?.token && !!config.splunk?.host) {
+      const newMetadata = {
+        ...defaultMetadata,
+        ...metadata,
+      };
       this.SplunkLogger.send(message, {
         sourcetype: level,
-        ...metadata,
+        ...newMetadata,
       });
     }
   }

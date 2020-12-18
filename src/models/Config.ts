@@ -38,6 +38,11 @@ export interface RewriteRule {
 }
 
 export interface SplunkOption {
+  host?: string;
+  token?: string;
+  source?: string;
+  sourceType?: string;
+  sourceHost?: string;
   httpRequest?: boolean;
 }
 
