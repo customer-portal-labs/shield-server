@@ -5,6 +5,7 @@ import cors from 'cors';
 import helmet from 'helmet';
 import cookieParser from 'cookie-parser';
 import history from 'connect-history-api-fallback';
+import merge from 'lodash/merge';
 import { ShieldConfig } from '../models/Config';
 import rewrite from './rewrite';
 import proxy from './proxy';
@@ -12,12 +13,13 @@ import bodyParser from 'body-parser';
 import responseWrapper from './responseWrapper';
 import health from '../routes/health';
 import info from '../routes/info';
-import { config } from '../config';
+import { getConfig } from '../config';
 import { logger } from '../logger';
 
 export const defaultMiddlewares = (
-  options: ShieldConfig = config
+  conf: Partial<ShieldConfig> = getConfig()
 ): RequestHandler[] => {
+  const options = merge(getConfig(), conf);
   morgan.token('remote-addr', (req: Request) => {
     const akamaiIP = req.header('True-Client-IP');
     const realIP = req.header('x-real-ip');

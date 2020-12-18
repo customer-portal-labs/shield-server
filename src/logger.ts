@@ -1,18 +1,20 @@
 import Log2Splunk, { ILog2SplunkOptions, IMetadata } from 'log2splunk';
 import { LoggerLevel } from './models/Config';
-import { config } from './config';
+import { getConfig } from './config';
+
+const config = getConfig();
 
 const opts: Partial<ILog2SplunkOptions> = {
-  token: config.splunk?.token,
-  host: config.splunk?.host,
-  source: config.splunk?.source,
+  token: config.splunk.token,
+  host: config.splunk.host,
+  source: config.splunk.source,
   https: {
     rejectUnauthorized: false,
   },
 };
 
 const defaultMetadata: IMetadata = {
-  host: config.splunk?.sourceHost,
+  host: config.splunk.sourceHost,
 };
 
 class Logger {

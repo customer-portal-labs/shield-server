@@ -1,10 +1,8 @@
 import express, { Request, Response } from 'express';
+import merge from 'lodash/merge';
 import request from 'supertest';
-import {
-  defaultMiddlewares,
-  config,
-  Response as SelfResponse,
-} from '../../src/index';
+import { expect } from 'chai';
+import { defaultMiddlewares, ShieldConfig, getConfig } from '../../src/index';
 
 describe('middlewares', () => {
   it('default middleware', (done) => {
@@ -27,9 +25,9 @@ describe('middlewares', () => {
 
   it('api mode', (done) => {
     const app = express();
-    app.use(defaultMiddlewares({ ...config, mode: 'api' }));
+    app.use(defaultMiddlewares({ mode: 'api', responseWrapper: true }));
     app.get('/api/user', (req: Request, res: Response) => {
-      (res as SelfResponse).success({ name: 'john' });
+      res.success({ name: 'john' });
     });
     request(app)
       .get('/api/user')
@@ -50,7 +48,6 @@ describe('middlewares', () => {
     const app = express();
     app.use(
       defaultMiddlewares({
-        ...config,
         proxies: [
           {
             from: '/library',
@@ -65,13 +62,12 @@ describe('middlewares', () => {
       .expect('Content-Type', /html/)
       .expect(200)
       .end(done);
-  });
+  }).timeout(300000);
 
   it('with rewrite', (done) => {
     const app = express();
     app.use(
       defaultMiddlewares({
-        ...config,
         rewrite: [
           {
             from: '/api/user',
@@ -102,12 +98,19 @@ describe('middlewares', () => {
   });
 
   it('info router', (done) => {
+    const newConfig: Partial<ShieldConfig> = {
+      splunk: {
+        host: 'https://any.any',
+      },
+    };
+
     const app = express();
-    app.use(defaultMiddlewares());
+    app.use(defaultMiddlewares(newConfig));
+    const config = getConfig();
 
     request(app)
       .get('/server-info')
       .set('User-Agent', 'Unit test')
-      .expect(200, config, done);
+      .expect(200, merge(config, newConfig), done);
   });
 });
