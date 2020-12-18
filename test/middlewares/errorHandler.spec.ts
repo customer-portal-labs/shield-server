@@ -4,8 +4,7 @@ import { expect } from 'chai';
 import {
   defaultMiddlewares,
   defaultErrorHandlers,
-  config,
-  Response as SelfResponse,
+  ShieldConfig,
 } from '../../src/index';
 
 describe('errorHandlers', () => {
@@ -22,13 +21,17 @@ describe('errorHandlers', () => {
 
   it('api mode', (done) => {
     const app = express();
-    app.use(defaultMiddlewares({ ...config, mode: 'api' }));
+    const newConfig: Partial<ShieldConfig> = {
+      mode: 'api',
+      responseWrapper: true,
+    };
+    app.use(defaultMiddlewares(newConfig));
 
     app.get('/api/user', (req: Request, res: Response) => {
       throw new Error('Unit test error');
     });
 
-    app.use(defaultErrorHandlers({ ...config, mode: 'api' }));
+    app.use(defaultErrorHandlers(newConfig));
 
     request(app)
       .get('/api/user')

@@ -7,9 +7,12 @@ import chalk from 'chalk';
 import figlet from 'figlet';
 import Express from 'express';
 import internalIp from 'internal-ip';
-import { defaultMiddlewares, defaultErrorHandlers, config } from '../';
+import { defaultMiddlewares, defaultErrorHandlers } from '../';
+import { ShieldConfig } from '../models/Config';
 // eslint-disable-next-line
 const pkgJSON = require('../../package.json');
+
+const config: Partial<ShieldConfig> = {};
 
 const args = arg({
   // Types

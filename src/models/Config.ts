@@ -13,7 +13,7 @@ export interface ShieldConfig {
   helmetOption?: Record<string, unknown>;
   staticDir?: string;
   publicPath?: string;
-  splunk?: SplunkOption;
+  splunk: SplunkOption;
   responseWrapper?: boolean;
   historyApiFallback?: boolean;
   proxies?: ProxyConfig[];

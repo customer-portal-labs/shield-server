@@ -1,7 +1,7 @@
 import { Request, Response, NextFunction, ErrorRequestHandler } from 'express';
-import { config } from '../config';
+import merge from 'lodash/merge';
+import { getConfig } from '../config';
 import { ShieldConfig } from '../models/Config';
-import { Response as NewResponse } from '../models/Response';
 import { logger } from '../logger';
 
 export interface IErrorHandlerOptions {
@@ -21,8 +21,8 @@ const errorHandler = (options: ShieldConfig): ErrorRequestHandler => (
       error: error.message,
       message: error.stack,
     });
-    if (options.mode === 'api') {
-      (res as NewResponse).error(error.message, 500, error.stack);
+    if (options.mode === 'api' && options.responseWrapper) {
+      res.error(error.message, 500, error.stack);
       return;
     } else {
       res.statusCode = 500;
@@ -33,8 +33,9 @@ const errorHandler = (options: ShieldConfig): ErrorRequestHandler => (
 };
 
 export const defaultErrorHandlers = (
-  options: ShieldConfig = config
+  conf: Partial<ShieldConfig> = getConfig()
 ): ErrorRequestHandler[] => {
+  const options = merge(getConfig(), conf);
   const errorHandlers: ErrorRequestHandler[] = [errorHandler(options)];
 
   return errorHandlers;

@@ -1,9 +1,10 @@
 import { cosmiconfigSync } from 'cosmiconfig';
+import merge from 'lodash/merge';
 import { ShieldConfig } from './models/Config';
 
 const explorerSync = cosmiconfigSync('shield');
 
-const getConfig = (): ShieldConfig => {
+export const getConfig = (): ShieldConfig => {
   const rcResult = explorerSync.search();
   const defaultConfig: ShieldConfig = {
     name: 'shield-server',
@@ -25,29 +26,27 @@ const getConfig = (): ShieldConfig => {
     loggerLevel: 'info',
   };
 
-  if (defaultConfig.splunk) {
-    if (process.env.SPLUNK_HOST !== undefined) {
-      defaultConfig.splunk.host = process.env.SPLUNK_HOST;
-    }
-    if (process.env.SPLUNK_TOKEN !== undefined) {
-      defaultConfig.splunk.token = process.env.SPLUNK_TOKEN;
-    }
-    if (process.env.SPLUNK_SOURCE !== undefined) {
-      defaultConfig.splunk.source = process.env.SPLUNK_SOURCE;
-    }
-    if (process.env.SPLUNK_SOURCE_TYPE !== undefined) {
-      defaultConfig.splunk.sourceType = process.env.SPLUNK_SOURCE_TYPE;
-    }
-    if (process.env.SPLUNK_SOURCE_HOST !== undefined) {
-      defaultConfig.splunk.sourceHost = process.env.SPLUNK_SOURCE_HOST;
-    }
-  }
-
+  let config = defaultConfig;
   if (rcResult) {
     const rcConfig = rcResult.config;
-    return Object.assign(defaultConfig, rcConfig);
+    config = merge(defaultConfig, rcConfig);
   }
+
+  if (process.env.SPLUNK_HOST !== undefined) {
+    config.splunk.host = process.env.SPLUNK_HOST;
+  }
+  if (process.env.SPLUNK_TOKEN !== undefined) {
+    config.splunk.token = process.env.SPLUNK_TOKEN;
+  }
+  if (process.env.SPLUNK_SOURCE !== undefined) {
+    config.splunk.source = process.env.SPLUNK_SOURCE;
+  }
+  if (process.env.SPLUNK_SOURCE_TYPE !== undefined) {
+    config.splunk.sourceType = process.env.SPLUNK_SOURCE_TYPE;
+  }
+  if (process.env.SPLUNK_SOURCE_HOST !== undefined) {
+    config.splunk.sourceHost = process.env.SPLUNK_SOURCE_HOST;
+  }
+
   return defaultConfig;
 };
-
-export const config = getConfig();
