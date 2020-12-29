@@ -1,62 +1,27 @@
-import express, { Request, RequestHandler } from 'express';
+import express, { RequestHandler } from 'express';
+import bodyParser from 'body-parser';
 import compression from 'compression';
-import morgan from 'morgan';
 import cors from 'cors';
-import helmet from 'helmet';
 import cookieParser from 'cookie-parser';
 import history from 'connect-history-api-fallback';
+import helmet from 'helmet';
 import merge from 'lodash/merge';
+import { getConfig } from '../config';
 import { ShieldConfig } from '../models/Config';
-import rewrite from './rewrite';
-import proxy from './proxy';
-import bodyParser from 'body-parser';
-import responseWrapper from './responseWrapper';
 import health from '../routes/health';
 import info from '../routes/info';
-import { getConfig } from '../config';
-import { logger } from '../logger';
+import { log } from './log';
+import rewrite from './rewrite';
+import proxy from './proxy';
+import responseWrapper from './responseWrapper';
 
 export const defaultMiddlewares = (
   conf: Partial<ShieldConfig> = getConfig()
 ): RequestHandler[] => {
   const options = merge(getConfig(), conf);
-  morgan.token('remote-addr', (req: Request) => {
-    const akamaiIP = req.header('True-Client-IP');
-    const realIP = req.header('x-real-ip');
-    const forwardedIP = req.header('x-forwarded-for');
-    return (
-      akamaiIP ||
-      realIP ||
-      forwardedIP ||
-      req.ip ||
-      (req.connection && req.connection.remoteAddress) ||
-      undefined
-    );
-  });
 
-  morgan.token('remote-user', (req: Request) => {
-    const rhUser = req.cookies['rh_user'];
-    if (rhUser) {
-      return rhUser.substring(0, rhUser.indexOf('|'));
-    }
-    return 'nonloginuser';
-  });
-
-  const morganStream = {
-    write: async (message: string) => {
-      try {
-        await logger.info(message, {
-          sourcetype: 'access_combined',
-        });
-      } catch (err) {
-        console.error(err);
-      }
-    },
-  };
   const middlewares: RequestHandler[] = [
-    morgan('combined', {
-      stream: options.splunk?.httpRequest ? morganStream : process.stdout,
-    }),
+    log(options),
     helmet(options.helmetOption),
     cookieParser(),
   ];
