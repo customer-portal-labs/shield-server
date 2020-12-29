@@ -25,7 +25,7 @@ class Logger {
     level: LoggerLevel,
     metadata: IMetadata = defaultMetadata
   ) {
-    if (!!config.splunk?.token && !!config.splunk?.host) {
+    if (!!config.splunk.token && !!config.splunk.host) {
       const newMetadata = {
         ...defaultMetadata,
         ...metadata,
@@ -75,3 +75,8 @@ class Logger {
 }
 
 export const logger = new Logger();
+
+process.on('uncaughtException', (err) => {
+  logger.error(`error: ${err.message} \n errorStack:${err.stack}`);
+  process.exit(1);
+});
