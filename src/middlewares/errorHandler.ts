@@ -21,7 +21,7 @@ const errorHandler = (options: ShieldConfig): ErrorRequestHandler => (
       error: error.message,
       message: error.stack,
     });
-    if (options.mode === 'api' && options.responseWrapper) {
+    if (options.mode === 'api') {
       res.error(error.message, 500, error.stack);
       return;
     } else {

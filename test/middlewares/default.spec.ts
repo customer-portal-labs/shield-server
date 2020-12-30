@@ -25,7 +25,7 @@ describe('middlewares', () => {
 
   it('api mode', (done) => {
     const app = express();
-    app.use(defaultMiddlewares({ mode: 'api', responseWrapper: true }));
+    app.use(defaultMiddlewares({ mode: 'api' }));
     app.get('/api/user', (req: Request, res: Response) => {
       res.success({ name: 'john' });
     });

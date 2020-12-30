@@ -23,7 +23,6 @@ describe('errorHandlers', () => {
     const app = express();
     const newConfig: Partial<ShieldConfig> = {
       mode: 'api',
-      responseWrapper: true,
     };
     app.use(defaultMiddlewares(newConfig));
 
