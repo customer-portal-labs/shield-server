@@ -1,6 +1,6 @@
 import { cosmiconfigSync } from 'cosmiconfig';
 import merge from 'lodash/merge';
-import { ShieldConfig } from './models/Config';
+import { ShieldConfig, LoggerLevel } from './models/Config';
 
 const explorerSync = cosmiconfigSync('shield');
 
@@ -14,7 +14,6 @@ export const getConfig = (): ShieldConfig => {
     morganFormat: 'combined',
     port: 8080,
     debug: false,
-    responseWrapper: true, // Only works when mode = api
     splunk: {
       httpRequest: false,
     },
@@ -30,6 +29,10 @@ export const getConfig = (): ShieldConfig => {
   if (rcResult) {
     const rcConfig = rcResult.config;
     config = merge(defaultConfig, rcConfig);
+  }
+
+  if (process.env.LOGGER_LEVEL !== undefined) {
+    config.loggerLevel = process.env.LOGGER_LEVEL as LoggerLevel;
   }
 
   if (process.env.SPLUNK_HOST !== undefined) {

@@ -14,7 +14,6 @@ export interface ShieldConfig {
   staticDir?: string;
   publicPath?: string;
   splunk: SplunkOption;
-  responseWrapper?: boolean;
   historyApiFallback?: boolean;
   proxies?: ProxyConfig[];
   rewrite?: RewriteRule[];

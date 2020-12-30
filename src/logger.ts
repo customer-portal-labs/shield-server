@@ -1,33 +1,50 @@
 import Log2Splunk, { ILog2SplunkOptions, IMetadata } from 'log2splunk';
-import { LoggerLevel } from './models/Config';
+import { LoggerLevel, ShieldConfig } from './models/Config';
 import { getConfig } from './config';
+import { merge } from 'lodash';
 
-const config = getConfig();
+export class Logger {
+  private SplunkLogger;
+  private defaultMetadata: IMetadata;
+  private shouldSendToSplunk = false;
+  private levelConfig: LoggerLevel = 'info';
+  private loggerLevelMapping: { [key in LoggerLevel]: number } = {
+    error: 0,
+    warn: 1,
+    info: 2,
+    log: 3,
+    debug: 4,
+  };
+  constructor(options: Partial<ShieldConfig> = getConfig()) {
+    const config = merge(getConfig(), options);
+    const opts: Partial<ILog2SplunkOptions> = {
+      token: config.splunk?.token,
+      host: config.splunk?.host,
+      source: config.splunk?.source,
+      https: {
+        rejectUnauthorized: false,
+      },
+    };
 
-const opts: Partial<ILog2SplunkOptions> = {
-  token: config.splunk.token,
-  host: config.splunk.host,
-  source: config.splunk.source,
-  https: {
-    rejectUnauthorized: false,
-  },
-};
+    this.defaultMetadata = {
+      host: config.splunk?.sourceHost,
+    };
+    this.SplunkLogger = new Log2Splunk(opts);
+    this.levelConfig = config.loggerLevel || 'info';
 
-const defaultMetadata: IMetadata = {
-  host: config.splunk.sourceHost,
-};
-
-class Logger {
-  private SplunkLogger = new Log2Splunk(opts);
+    if (!!config.splunk?.token && !!config.splunk?.host) {
+      this.shouldSendToSplunk = true;
+    }
+  }
 
   private sendToSplunk(
     message: string | Record<string, unknown>,
     level: LoggerLevel,
-    metadata: IMetadata = defaultMetadata
+    metadata: IMetadata = this.defaultMetadata
   ) {
-    if (!!config.splunk.token && !!config.splunk.host) {
+    if (this.shouldSendToSplunk) {
       const newMetadata = {
-        ...defaultMetadata,
+        ...this.defaultMetadata,
         ...metadata,
       };
       this.SplunkLogger.send(message, {
@@ -44,33 +61,46 @@ class Logger {
     return message;
   }
 
+  private shouldShow(level: LoggerLevel): boolean {
+    return (
+      this.loggerLevelMapping[this.levelConfig] >=
+      this.loggerLevelMapping[level]
+    );
+  }
+
   log(message: string | Record<string, unknown>, metadata?: IMetadata): void {
-    console.log(this.stringMessage(message));
-    this.sendToSplunk(message, 'log', metadata);
+    if (this.shouldShow('log')) {
+      console.log(this.stringMessage(message));
+      this.sendToSplunk(message, 'log', metadata);
+    }
   }
 
   info(message: string | Record<string, unknown>, metadata?: IMetadata): void {
-    console.info(this.stringMessage(message));
-    this.sendToSplunk(message, 'info', metadata);
+    if (this.shouldShow('info')) {
+      console.info(this.stringMessage(message));
+      this.sendToSplunk(message, 'info', metadata);
+    }
   }
 
   debug(message: string | Record<string, unknown>, metadata?: IMetadata): void {
-    if (config.loggerLevel === 'debug') {
+    if (this.shouldShow('debug')) {
       console.debug(this.stringMessage(message));
       this.sendToSplunk(message, 'debug', metadata);
     }
   }
 
   warn(message: string | Record<string, unknown>, metadata?: IMetadata): void {
-    if (config.loggerLevel === 'warn') {
+    if (this.shouldShow('warn')) {
       console.warn(this.stringMessage(message));
       this.sendToSplunk(message, 'warn', metadata);
     }
   }
 
   error(message: string | Record<string, unknown>, metadata?: IMetadata): void {
-    console.error(this.stringMessage(message));
-    this.sendToSplunk(message, 'error', metadata);
+    if (this.shouldShow('error')) {
+      console.error(this.stringMessage(message));
+      this.sendToSplunk(message, 'error', metadata);
+    }
   }
 }
 

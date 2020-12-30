@@ -59,10 +59,7 @@ export const defaultMiddlewares = (
 
   if (options.mode === 'api') {
     middlewares.push(bodyParser.json());
-
-    if (options.responseWrapper) {
-      middlewares.push(responseWrapper() as RequestHandler);
-    }
+    middlewares.push(responseWrapper() as RequestHandler);
   }
 
   return middlewares;
