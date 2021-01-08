@@ -23,6 +23,7 @@ export const getConfig = (): ShieldConfig => {
       referrerPolicy: false,
     },
     loggerLevel: 'info',
+    requestBodySize: '100kb',
   };
 
   let config = defaultConfig;

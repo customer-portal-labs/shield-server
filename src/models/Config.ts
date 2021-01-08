@@ -18,6 +18,7 @@ export interface ShieldConfig {
   proxies?: ProxyConfig[];
   rewrite?: RewriteRule[];
   loggerLevel: LoggerLevel;
+  requestBodySize?: string;
 }
 
 export interface SSLConfig {

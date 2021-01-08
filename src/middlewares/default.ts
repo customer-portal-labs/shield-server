@@ -24,6 +24,7 @@ export const defaultMiddlewares = (
     log(options),
     helmet(options.helmetOption),
     cookieParser(),
+    responseWrapper() as RequestHandler,
   ];
 
   if (options.compression) {
@@ -58,8 +59,11 @@ export const defaultMiddlewares = (
   middlewares.push(info(options));
 
   if (options.mode === 'api') {
-    middlewares.push(bodyParser.json());
-    middlewares.push(responseWrapper() as RequestHandler);
+    middlewares.push(
+      bodyParser.json({
+        limit: options.requestBodySize,
+      })
+    );
   }
 
   return middlewares;
