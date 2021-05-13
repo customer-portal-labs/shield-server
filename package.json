@@ -72,7 +72,7 @@
     "http-proxy-middleware": "^1.0.6",
     "internal-ip": "^6.2.0",
     "lodash": "^4.17.20",
-    "log2splunk": "0.0.4",
+    "log2splunk": "0.0.5",
     "morgan": "^1.10.0"
   },
   "husky": {
