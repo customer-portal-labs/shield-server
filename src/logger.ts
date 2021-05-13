@@ -50,6 +50,8 @@ export class Logger {
       this.SplunkLogger.send(message, {
         sourcetype: level,
         ...newMetadata,
+      }).catch((err) => {
+        console.error('Send log to Splunk failed:', err)
       });
     }
   }
