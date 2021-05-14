@@ -45,7 +45,7 @@ export const log = (options: ShieldConfig): RequestHandler => {
   if (options.morganSkip) {
     if (typeof options.morganSkip === 'string') {
       const skipUrl = options.morganSkip as string;
-      skip = (req: Request, res: Response) => req.url === skipUrl;
+      skip = (req: Request) => req.url === skipUrl;
     } else if (typeof options.morganSkip === 'function') {
       skip = options.morganSkip;
     }
@@ -56,7 +56,7 @@ export const log = (options: ShieldConfig): RequestHandler => {
   };
 
   if (skip) {
-    opts.skip = skip as any;
+    opts.skip = skip as (req: Request, res: Response) => boolean;
   }
 
   return (req: Request, res: Response, next: NextFunction) =>
