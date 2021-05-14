@@ -55,7 +55,7 @@ export const defaultMiddlewares = (
     middlewares.push(express.static(options.staticDir));
   }
 
-  middlewares.push(health());
+  middlewares.push(health(options.healthCheckPath));
   middlewares.push(info(options));
 
   if (options.mode === 'api') {

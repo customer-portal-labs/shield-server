@@ -24,6 +24,7 @@ export const getConfig = (): ShieldConfig => {
     },
     loggerLevel: 'info',
     requestBodySize: '100kb',
+    healthCheckPath: '/server-health',
   };
 
   let config = defaultConfig;
