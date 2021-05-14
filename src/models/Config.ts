@@ -5,6 +5,7 @@ export interface ShieldConfig {
   mode: ShieldMode;
   debug: boolean;
   morganFormat: string;
+  morganSkip?: string | ((req: Request, res: Response) => boolean);
   port?: number;
   ssl?: SSLConfig;
   compression?: boolean;
@@ -19,6 +20,7 @@ export interface ShieldConfig {
   rewrite?: RewriteRule[];
   loggerLevel: LoggerLevel;
   requestBodySize?: string;
+  healthCheckPath: string;
 }
 
 export interface SSLConfig {

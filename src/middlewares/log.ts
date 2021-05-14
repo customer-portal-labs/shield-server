@@ -41,8 +41,24 @@ export const log = (options: ShieldConfig): RequestHandler => {
     };
   }
 
+  let skip;
+  if (options.morganSkip) {
+    if (typeof options.morganSkip === 'string') {
+      const skipUrl = options.morganSkip as string;
+      skip = (req: Request) => req.url === skipUrl;
+    } else if (typeof options.morganSkip === 'function') {
+      skip = options.morganSkip;
+    }
+  }
+
+  const opts: morgan.Options<Request, Response> = {
+    stream,
+  };
+
+  if (skip) {
+    opts.skip = skip as (req: Request, res: Response) => boolean;
+  }
+
   return (req: Request, res: Response, next: NextFunction) =>
-    morgan('combined', {
-      stream,
-    })(req, res, next);
+    morgan('combined', opts)(req, res, next);
 };

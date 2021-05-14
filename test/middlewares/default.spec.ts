@@ -113,4 +113,14 @@ describe('middlewares', () => {
       .set('User-Agent', 'Unit test')
       .expect(200, merge(config, newConfig), done);
   });
+
+  it('skip health log', (done) => {
+    const app = express();
+    app.use(defaultMiddlewares({morganSkip: '/server-health'}));
+
+    request(app)
+      .get('/server-health')
+      .set('User-Agent', 'Unit test')
+      .expect(200, "I'm OK", done);
+  });
 });
