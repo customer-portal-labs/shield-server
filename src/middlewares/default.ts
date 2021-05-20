@@ -1,5 +1,4 @@
 import express, { RequestHandler } from 'express';
-import bodyParser from 'body-parser';
 import compression from 'compression';
 import cors from 'cors';
 import cookieParser from 'cookie-parser';
@@ -61,7 +60,7 @@ export const defaultMiddlewares = (
 
   if (options.mode === 'api') {
     middlewares.push(
-      bodyParser.json({
+      express.json({
         limit: options.requestBodySize,
       })
     );
