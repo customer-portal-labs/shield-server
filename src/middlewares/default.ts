@@ -14,6 +14,7 @@ import { log } from './log';
 import rewrite from './rewrite';
 import proxy from './proxy';
 import responseWrapper from './responseWrapper';
+import apiRateLimit from './apiRateLimit';
 
 export const defaultMiddlewares = (
   conf: Partial<ShieldConfig> = getConfig()
@@ -64,6 +65,7 @@ export const defaultMiddlewares = (
         limit: options.requestBodySize,
       })
     );
+    middlewares.push(apiRateLimit(options.rateLimitOption));
   }
 
   return middlewares;

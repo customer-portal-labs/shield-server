@@ -1,4 +1,5 @@
 import { CorsOptions, CorsOptionsDelegate } from 'cors';
+import { Options as RateLimitOption} from 'express-rate-limit';
 
 export interface ShieldConfig {
   name: string;
@@ -21,6 +22,7 @@ export interface ShieldConfig {
   loggerLevel: LoggerLevel;
   requestBodySize?: string;
   healthCheckPath: string;
+  rateLimitOption?: RateLimitOption;
 }
 
 export interface SSLConfig {
