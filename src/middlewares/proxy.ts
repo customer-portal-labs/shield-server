@@ -1,4 +1,3 @@
-import https from 'https';
 import { createProxyMiddleware, Options } from 'http-proxy-middleware';
 import { ProxyConfig } from '../models/Config';
 import { NextFunction, Request, RequestHandler, Response } from 'express';
@@ -15,10 +14,6 @@ export default (proxies: ProxyConfig[]): RequestHandler => (
       xfwd: true,
       target: match.to,
     };
-
-    if (match.to.startsWith('https')) {
-      opt.agent = https.globalAgent;
-    }
 
     return createProxyMiddleware(opt)(req, res, next);
   }

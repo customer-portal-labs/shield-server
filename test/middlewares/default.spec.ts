@@ -1,7 +1,6 @@
 import express, { Request, Response } from 'express';
 import merge from 'lodash/merge';
 import request from 'supertest';
-import { expect } from 'chai';
 import { defaultMiddlewares, ShieldConfig, getConfig } from '../../src/index';
 
 describe('middlewares', () => {
@@ -42,49 +41,6 @@ describe('middlewares', () => {
         },
         done
       );
-  });
-
-  it('with proxy', (done) => {
-    const app = express();
-    app.use(
-      defaultMiddlewares({
-        proxies: [
-          {
-            from: '/library',
-            to: 'https://www.apple.com',
-          },
-        ],
-      })
-    );
-    request(app)
-      .get('/library/test/success.html')
-      .set('User-Agent', 'Unit test')
-      .expect('Content-Type', /html/)
-      .expect(200)
-      .end(done);
-  }).timeout(300000);
-
-  it('with rewrite', (done) => {
-    const app = express();
-    app.use(
-      defaultMiddlewares({
-        rewrite: [
-          {
-            from: '/api/user',
-            to: '/user',
-          },
-        ],
-      })
-    );
-
-    app.get('/user', (req: Request, res: Response) => {
-      res.status(200).json({ name: 'john' });
-    });
-    request(app)
-      .get('/api/user')
-      .set('User-Agent', 'Unit test')
-      .expect(200)
-      .end(done);
   });
 
   it('health router', (done) => {
