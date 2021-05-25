@@ -5,7 +5,7 @@ import {
   defaultErrorHandlers,
 } from '../../src/index';
 
-describe('api rate limit', () => {
+describe('rateLimit middleware', () => {
   const app = express();
   app.use(
     defaultMiddlewares({

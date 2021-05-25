@@ -5,15 +5,10 @@ export interface IRewriteOptions {
   rules: RewriteRule[];
 }
 
-export default (options: IRewriteOptions): RequestHandler => (
-  req: Request,
-  res: Response,
-  next: NextFunction
-) => {
-  if (options.rules) {
+export default (options: IRewriteOptions): RequestHandler =>
+  (req: Request, res: Response, next: NextFunction) => {
     options.rules.forEach((rule) => {
       req.url = req.url.replace(rule.from, rule.to);
     });
-  }
-  next();
-};
+    next();
+  };

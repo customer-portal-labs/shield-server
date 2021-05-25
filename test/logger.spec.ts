@@ -29,7 +29,7 @@ describe('logger', () => {
     output = [];
   });
 
-  it('test debug level', async () => {
+  it('test debug level', () => {
     const logger = new Logger({ loggerLevel: 'debug' });
     logger.log('hello log');
     logger.info('hello info');
@@ -45,7 +45,7 @@ describe('logger', () => {
     ]);
   });
 
-  it('test log level', async () => {
+  it('test log level', () => {
     const logger = new Logger({ loggerLevel: 'log' });
     logger.log('hello log');
     logger.info('hello info');
@@ -60,7 +60,7 @@ describe('logger', () => {
     ]);
   });
 
-  it('test info level', async () => {
+  it('test info level', () => {
     const logger = new Logger({ loggerLevel: 'info' });
     logger.log('hello log');
     logger.info('hello info');
@@ -70,7 +70,7 @@ describe('logger', () => {
     expect(output).to.eql(['hello info', 'hello warn', 'hello error']);
   });
 
-  it('test warn level', async () => {
+  it('test warn level', () => {
     const logger = new Logger({ loggerLevel: 'warn' });
     logger.log('hello log');
     logger.info('hello info');
@@ -80,7 +80,7 @@ describe('logger', () => {
     expect(output).to.eql(['hello warn', 'hello error']);
   });
 
-  it('test error level', async () => {
+  it('test error level', (done) => {
     const logger = new Logger({ loggerLevel: 'error' });
     logger.log('hello log');
     logger.info('hello info');
@@ -88,9 +88,11 @@ describe('logger', () => {
     logger.error('hello error');
     logger.debug('hello debug');
     expect(output).to.eql(['hello error']);
+
+    done();
   });
 
-  it('test error level with env vars', async () => {
+  it('test error level with env vars', (done) => {
     process.env.LOGGER_LEVEL = 'error';
     const logger = new Logger();
     logger.log('hello log');
@@ -99,5 +101,24 @@ describe('logger', () => {
     logger.error('hello error');
     logger.debug('hello debug');
     expect(output).to.eql(['hello error']);
+    done();
+  });
+
+  it('test error level with splunk setting', (done) => {
+    process.env.LOGGER_LEVEL = 'error';
+    const logger = new Logger({
+      splunk: {
+        token: 'test_token',
+        host: '127.0.0.1',
+        source: 'test_source',
+      }
+    });
+    logger.log('hello log');
+    logger.info('hello info');
+    logger.warn('hello warn');
+    logger.error('hello error');
+    logger.debug('hello debug');
+    expect(output).to.eql(['hello error']);
+    done();
   });
 });
