@@ -27,6 +27,14 @@ export const defaultMiddlewares = (
     responseWrapper() as RequestHandler,
   ];
 
+  if (options.mode === 'api') {
+    middlewares.push(
+      express.json({
+        limit: options.requestBodySize,
+      })
+    );
+  }
+
   if (options.compression) {
     middlewares.push(compression());
   }
@@ -58,12 +66,7 @@ export const defaultMiddlewares = (
   middlewares.push(health(options.healthCheckPath));
   middlewares.push(info(options));
 
-  if (options.mode === 'api') {
-    middlewares.push(
-      express.json({
-        limit: options.requestBodySize,
-      })
-    );
+  if (options.rateLimitOption) {
     middlewares.push(apiRateLimit(options.rateLimitOption));
   }
 

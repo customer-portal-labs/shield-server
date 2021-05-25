@@ -1,19 +1,11 @@
-import { NextFunction, Request, RequestHandler, Response } from 'express';
+import { Request } from 'express';
 import rateLimit from 'express-rate-limit';
-import { getIP} from '../util';
+import { getIP } from '../util';
 
-
-
-export default (options?: rateLimit.Options) : RequestHandler => (
-  req: Request,
-  res: Response,
-  next: NextFunction
-) => {
-
-  if (options) {
-    options.keyGenerator = (req: Request) => getIP(req);
-    return rateLimit(options)(req, res, next);
-  }
-  next();
-}
-
+export default (opt: rateLimit.Options): rateLimit.RateLimit => {
+  opt.keyGenerator = (req: Request) => {
+    const ip = getIP(req);
+    return ip;
+  };
+  return rateLimit(opt);
+};
