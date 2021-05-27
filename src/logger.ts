@@ -18,21 +18,21 @@ export class Logger {
   constructor(options: Partial<ShieldConfig> = getConfig()) {
     const config = merge(getConfig(), options);
     const opts: Partial<ILog2SplunkOptions> = {
-      token: config.splunk?.token,
-      host: config.splunk?.host,
-      source: config.splunk?.source,
+      token: config.splunk.token,
+      host: config.splunk.host,
+      source: config.splunk.source,
       https: {
         rejectUnauthorized: false,
       },
     };
 
     this.defaultMetadata = {
-      host: config.splunk?.sourceHost,
+      host: config.splunk.sourceHost,
     };
     this.SplunkLogger = new Log2Splunk(opts);
-    this.levelConfig = config.loggerLevel || 'info';
+    this.levelConfig = config.loggerLevel;
 
-    if (!!config.splunk?.token && !!config.splunk?.host) {
+    if (!!config.splunk.token && !!config.splunk.host) {
       this.shouldSendToSplunk = true;
     }
   }
@@ -107,8 +107,3 @@ export class Logger {
 }
 
 export const logger = new Logger();
-
-process.on('uncaughtException', (err) => {
-  logger.error(`error: ${err.message} \n errorStack:${err.stack}`);
-  process.exit(1);
-});
