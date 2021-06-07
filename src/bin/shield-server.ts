@@ -9,10 +9,11 @@ import Express from 'express';
 import internalIp from 'internal-ip';
 import { defaultMiddlewares, defaultErrorHandlers } from '../';
 import { ShieldConfig } from '../models/Config';
+import { getConfig } from '../config';
 // eslint-disable-next-line
 const pkgJSON = require('../../package.json');
 
-const config: Partial<ShieldConfig> = {};
+const config: Partial<ShieldConfig> = getConfig();
 
 const args = arg({
   // Types
