@@ -1,6 +1,3 @@
-import { CorsOptions, CorsOptionsDelegate } from 'cors';
-import { Options as RateLimitOption} from 'express-rate-limit';
-
 export interface ShieldConfig {
   name: string;
   mode: ShieldMode;
@@ -11,7 +8,7 @@ export interface ShieldConfig {
   ssl?: SSLConfig;
   compression?: boolean;
   cors?: boolean;
-  corsOption?: CorsOptions | CorsOptionsDelegate;
+  corsOption?: Record<string, unknown>;
   helmetOption?: Record<string, unknown>;
   staticDir?: string;
   publicPath?: string;
@@ -22,7 +19,7 @@ export interface ShieldConfig {
   loggerLevel: LoggerLevel;
   requestBodySize?: string;
   healthCheckPath: string;
-  rateLimitOption?: RateLimitOption;
+  rateLimitOption?: Record<string, unknown>;
 }
 
 export interface SSLConfig {
