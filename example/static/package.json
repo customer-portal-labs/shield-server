@@ -5,7 +5,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "start": "../../dist/bin/shield-server.js ."
+    "start": "node ../../dist/bin/shield-server.js ."
   },
   "author": "",
   "license": "MIT"

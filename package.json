@@ -11,7 +11,7 @@
   ],
   "scripts": {
     "prepublishOnly": "npm run build",
-    "prebuild": "npm run clean",
+    "prebuild": "npm run clean && npm run lint",
     "dev": "ts-node ./src/bin/shield-server.ts",
     "build": "tsc --build tsconfig.production.json",
     "pretest": "npm run lint",
