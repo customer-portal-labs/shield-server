@@ -6,7 +6,7 @@ import arg from 'arg';
 import chalk from 'chalk';
 import figlet from 'figlet';
 import Express from 'express';
-import internalIp from 'internal-ip';
+import { internalIpV4Sync } from 'internal-ip';
 import { defaultMiddlewares, defaultErrorHandlers } from '../';
 import { ShieldConfig } from '../models/Config';
 import { getConfig } from '../config';
@@ -115,7 +115,7 @@ if (!args['--help'] && !args['--version']) {
     console.log(chalk.green(figlet.textSync('Shield')));
     console.log(
       chalk.green(
-        `Server start on ${protocol}://${internalIp.v4.sync()}:${config.port}`
+        `Server start on ${protocol}://${internalIpV4Sync()}:${config.port}`
       )
     );
     if (config.debug) {
