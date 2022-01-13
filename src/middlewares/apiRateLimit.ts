@@ -1,11 +1,18 @@
 import { Request } from 'express';
-import rateLimit from 'express-rate-limit';
+import rateLimit, {
+  Options,
+  RateLimitRequestHandler,
+} from 'express-rate-limit';
 import { getIP } from '../util';
 
-export default (opt: rateLimit.Options): rateLimit.RateLimit => {
-  opt.keyGenerator = (req: Request) => {
-    const ip = getIP(req);
-    return ip;
-  };
-  return rateLimit(opt);
+export default (
+  opt: Omit<Partial<Options>, 'store'>
+): RateLimitRequestHandler => {
+  return rateLimit({
+    ...opt,
+    keyGenerator: (req: Request) => {
+      const ip = getIP(req);
+      return ip;
+    },
+  });
 };
