@@ -44,7 +44,7 @@
     "@types/lodash": "4.14.191",
     "@types/mocha": "10.0.1",
     "@types/mock-fs": "4.13.1",
-    "@types/morgan": "1.9.3",
+    "@types/morgan": "1.9.4",
     "@types/supertest": "2.0.12",
     "@typescript-eslint/eslint-plugin": "5.47.1",
     "@typescript-eslint/parser": "5.47.1",
