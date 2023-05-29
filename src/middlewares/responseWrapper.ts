@@ -1,5 +1,4 @@
 import { Request, Response, NextFunction, RequestHandler } from 'express';
-// import { WrapperResponse } from '../models/Response';
 
 export enum Status {
   success,
@@ -21,24 +20,21 @@ interface FailResponseBody<T> {
 
 type ResponseBody<T> = SuccessResponseBody<T> & FailResponseBody<T>;
 
-export default (): Partial<RequestHandler> => (
-  req: Request,
-  res: Response,
-  next: NextFunction
-) => {
-  res.success = <T>(data: T, statusCode = 200, message?: string) => {
-    res.status(statusCode).json(format('success', data, null, message));
-  };
+export default (): Partial<RequestHandler> =>
+  (req: Request, res: Response, next: NextFunction) => {
+    res.success = <T>(data: T, statusCode = 200, message?: string) => {
+      res.status(statusCode).json(format('success', data, null, message));
+    };
 
-  res.fail = <T>(error: T, statusCode = 400, message?: string) => {
-    res.status(statusCode).json(format('fail', null, error, message));
-  };
+    res.fail = <T>(error: T, statusCode = 400, message?: string) => {
+      res.status(statusCode).json(format('fail', null, error, message));
+    };
 
-  res.error = <T>(error: T, statusCode = 500, message?: string) => {
-    res.status(statusCode).json(format('error', null, error, message));
+    res.error = <T>(error: T, statusCode = 500, message?: string) => {
+      res.status(statusCode).json(format('error', null, error, message));
+    };
+    next();
   };
-  next();
-};
 
 const format = <T>(
   status: string,
