@@ -34,7 +34,7 @@
   },
   "homepage": "https://github.com/customer-portal-labs/shield-server#readme",
   "devDependencies": {
-    "@types/chai": "4.3.9",
+    "@types/chai": "4.3.10",
     "@types/compression": "1.7.5",
     "@types/connect-history-api-fallback": "1.5.3",
     "@types/cookie-parser": "1.4.6",
