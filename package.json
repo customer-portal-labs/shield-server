@@ -59,7 +59,7 @@
     "prettier": "2.8.8",
     "rimraf": "5.0.5",
     "supertest": "6.3.3",
-    "ts-node": "10.9.1",
+    "ts-node": "10.9.2",
     "typescript": "5.3.3"
   },
   "dependencies": {
