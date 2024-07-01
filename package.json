@@ -60,7 +60,7 @@
     "rimraf": "5.0.7",
     "supertest": "6.3.4",
     "ts-node": "10.9.2",
-    "typescript": "5.5.2"
+    "typescript": "5.5.3"
   },
   "dependencies": {
     "arg": "^5.0.2",
