@@ -55,7 +55,7 @@
     "lint-staged": "15.2.7",
     "mocha": "10.5.2",
     "mock-fs": "5.2.0",
-    "nyc": "15.1.0",
+    "nyc": "17.0.0",
     "prettier": "3.3.2",
     "rimraf": "5.0.7",
     "supertest": "6.3.4",
