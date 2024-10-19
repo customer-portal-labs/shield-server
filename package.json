@@ -39,7 +39,7 @@
     "@types/connect-history-api-fallback": "1.5.4",
     "@types/cookie-parser": "1.4.7",
     "@types/cors": "2.8.17",
-    "@types/express": "4.17.21",
+    "@types/express": "5.0.0",
     "@types/figlet": "1.7.0",
     "@types/lodash": "4.17.12",
     "@types/mocha": "10.0.9",
