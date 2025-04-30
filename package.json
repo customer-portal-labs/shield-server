@@ -52,7 +52,7 @@
     "eslint": "8.57.1",
     "eslint-config-prettier": "9.1.0",
     "husky": "9.1.7",
-    "lint-staged": "15.2.10",
+    "lint-staged": "15.5.1",
     "mocha": "10.8.2",
     "mock-fs": "5.4.1",
     "nyc": "15.1.0",
