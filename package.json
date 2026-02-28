@@ -56,7 +56,7 @@
     "mocha": "10.8.2",
     "mock-fs": "5.5.0",
     "nyc": "15.1.0",
-    "prettier": "3.5.3",
+    "prettier": "3.8.1",
     "rimraf": "5.0.10",
     "supertest": "6.3.4",
     "ts-node": "10.9.2",
